@@ -31,8 +31,6 @@ public class Tabuleiro extends JFrame{
 //        add(panel);
         
         
-    
-        
             for(int i = 0; i < 15; i++)
             {
                 for(int j = 0; j < 15; j++)
@@ -56,15 +54,15 @@ public class Tabuleiro extends JFrame{
             }
         
         
-//                    botaoCima = new JButton ("Cima");
-//                            botaoCima.setBounds(650, 20, 100, 30);
-//                            botaoCima.addActionListener(new ActionListener() {
-//                                @Override
-//                                public void actionPerformed(ActionEvent e) {
-//                                    // Lógica para mover para cima
-//                                }
-//                            });
-//                            add(botaoCima);
+                    botaoCima = new JButton ("Cima");
+                            botaoCima.setBounds(650, 20, 100, 30);
+                            botaoCima.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    // Lógica para mover para cima
+                                }
+                            });
+                            add(botaoCima);
                                    
 
 //                            botaoBaixo = new BotaoTabuleiro[][]("Baixo");
