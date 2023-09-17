@@ -10,6 +10,8 @@ import java.util.Random;
 
 
 public class Tabuleiro extends JFrame {
+    private static final Color COR_DESTAQUE_POCO = Color.BLUE;
+    private static final Color COR_DESTAQUE_MADEIRA = Color.GREEN; 
     private static final Color COR_DESTAQUE_JOGADOR = Color.YELLOW;
     private static final Color COR_DESTAQUE_MONSTRO = Color.BLACK;
     private static final Color COR_DESTAQUE_MONSTRO_RAPIDO = Color.RED;
@@ -43,6 +45,8 @@ public class Tabuleiro extends JFrame {
         player.setPosX(0);
         player.setPosX(0);
         botoesTabuleiro[0][0].adcionarDestaque(COR_DESTAQUE_JOGADOR);
+        criaPocos();
+        criaMadeira();
         moverMonstroRapido();
         moverMonstroLento();
 
@@ -71,7 +75,7 @@ public class Tabuleiro extends JFrame {
         botaoDireita = new JButton("Direita");
         botaoDireita.setBounds(650, 100, 100, 30);
         botaoDireita.addActionListener(e -> {
-            if (checkMove(player.getPosX(), player.getPosX() + 1)) {
+            if (checkMove(player.getPosX() + 1, player.getPosY())) {
                 atualizarPersonagem(player, COR_DESTAQUE_JOGADOR, player.getPosX(), player.getPosY(), player.getPosX() + 1, player.getPosY());
                 moverMonstroRapido();
                 moverMonstroLento();
@@ -82,7 +86,7 @@ public class Tabuleiro extends JFrame {
         botaoEsquerda = new JButton("Esquerda");
         botaoEsquerda.setBounds(650, 140, 100, 30);
         botaoEsquerda.addActionListener(e -> {
-            if (checkMove(player.getPosX(), player.getPosX() - 1)) {
+            if (checkMove(player.getPosX() - 1, player.getPosY())) {
                 atualizarPersonagem(player, COR_DESTAQUE_JOGADOR, player.getPosX(), player.getPosY(), player.getPosX() - 1, player.getPosY());
                 moverMonstroRapido();
                 moverMonstroLento();
@@ -203,13 +207,48 @@ public class Tabuleiro extends JFrame {
     private boolean checkMove(int x, int y) {
         return (x <= 14 && x >= 0 && y <= 14 && y >= 0) && !botoesTabuleiro[x][y].temAlguemAqui();
     }
+    
+    public void criaPocos(){
 
+        Random random = new Random();
+        int i = 0;
+        int min = 0;
+        int max = 14;
+        
+        while(i < 5){
+            
+        int pocoX = random.nextInt(max - min + 1) + min;
+        int pocoY = random.nextInt(max - min + 1) + min;
+        
+        if(!botoesTabuleiro[pocoX][pocoY].temAlguemAqui()){
+            botoesTabuleiro[pocoX][pocoY].adcionarDestaque(COR_DESTAQUE_POCO);
+            i++;
+        }
+        
+        }
+    }
+        
+
+    public void criaMadeira(){
+        
+        Random random = new Random();
+        int i=0;
+        int min = 0;
+        int max = 14;
+        
+        while(i<2){
+            
+            int madeiraX = random.nextInt(max - min + 1) + min;
+            int madeiraY = random.nextInt(max - min + 1) + min;
+            
+            if(!botoesTabuleiro[madeiraX][madeiraY].temAlguemAqui()){
+                botoesTabuleiro[madeiraX][madeiraY].adcionarDestaque(COR_DESTAQUE_MADEIRA);
+                i++;
+            }
+        }
+    }
+      
 }
-
-//    public void testPoco(){
-//
-//    }
-
 
 // #############################
 
