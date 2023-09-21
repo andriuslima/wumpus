@@ -167,9 +167,13 @@ public class Tabuleiro extends JFrame {
     }
 
     private void atualizarPersonagem(Personagem p, Color c, int xAntigo, int yAntigo, int xNovo, int yNovo) {
-        botoesTabuleiro[xAntigo][yAntigo].removerDestaque();
-        botoesTabuleiro[xNovo][yNovo].adicionarDestaque(c);
+//        botoesTabuleiro[xAntigo][yAntigo].removerDestaque();
+//        botoesTabuleiro[xNovo][yNovo].adicionarDestaque(c);
         botoesTabuleiro[xNovo][yNovo].setEscondido(false);
+        
+        checaItemTabuleiro(xAntigo,yAntigo);
+        checaItemTabuleiro(xNovo,yNovo);
+        
         p.setPosX(xNovo);
         p.setPosY(yNovo);
         System.out.println("Nova posicao de " + p.getClass().getSimpleName() + " -> x :" + p.getPosX() + " Posicao y: " + p.getPosY());
@@ -177,12 +181,16 @@ public class Tabuleiro extends JFrame {
     }
     private void atualizarMonstro(Personagem m, Color c, int xAntigo, int yAntigo, int xNovo, int yNovo) {
         
-        if(botoesTabuleiro[xNovo][yNovo].getEscondido() == false){
-            botoesTabuleiro[xNovo][yNovo].adicionarDestaque(c);
-        } 
-        if(botoesTabuleiro[xAntigo][yAntigo].getEscondido() == false){
-            botoesTabuleiro[xAntigo][yAntigo].removerDestaque();
-        }
+//        if(botoesTabuleiro[xNovo][yNovo].getEscondido() == false){
+//            botoesTabuleiro[xNovo][yNovo].adicionarDestaque(c);
+//        } 
+//        if(botoesTabuleiro[xAntigo][yAntigo].getEscondido() == false){
+//            botoesTabuleiro[xAntigo][yAntigo].removerDestaque();
+//        }
+        checaItemTabuleiro(xAntigo,yAntigo);
+        checaItemTabuleiro(xNovo,yNovo);
+        
+        
         m.setPosX(xNovo);
         m.setPosY(yNovo);
         System.out.println("Nova posicao de " + m.getClass().getSimpleName() + " -> x :" + m.getPosX() + " Posicao y: " + m.getPosY());
@@ -305,8 +313,11 @@ public class Tabuleiro extends JFrame {
 //        
     
     private void checaItemTabuleiro(int x, int y){
-        
-        
+        if(botoesTabuleiro[x][y].getEscondido()== true){
+            botoesTabuleiro[x][y].adcionarDestaqueItem(COR_DESTAQUE_CINZA);
+        }else if(botoesTabuleiro[x][y].getEscondido()== false){
+            
+        }
     }
     
     public void criaPocos(){

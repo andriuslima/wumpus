@@ -54,6 +54,7 @@ public class BotaoTabuleiro extends JButton {
     public boolean temAlguemAqui() {
         return this.temAlguemAqui;
     }
+    
     public void adicionarDestaque(Color color) {
         this.setBackground(color);
         this.temAlguemAqui = true;
