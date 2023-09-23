@@ -50,22 +50,8 @@ public class Tabuleiro extends JFrame {
         botaoCima.addActionListener(e -> {
             int novaPosY = player.getPosY() + 1; // Calcula a nova posição Y após o movimento
             if (checkMove(player.getPosX(), novaPosY)) {
-                BotaoTabuleiro destino = botoesTabuleiro[player.getPosX()][novaPosY];
-                TipoDeItem tipoDeItem = destino.retornarItem();
-                switch (tipoDeItem) {
-                    case OURO:
-                        coletarOuro(destino); // Primeiro, coleta o ouro
-                        break;
-                    case MADEIRA:
-                        coletarMadeira(destino);
-                        break;
-                    case POCO:
-                        caiuPoco();
-                        break;
-                    default:
-                        break;
-
-                }
+                // testa se encontoru o monstro
+                coletaItem(player.getPosX(), novaPosY);
                 atualizarPersonagem(player, COR_DESTAQUE_JOGADOR, player.getPosX(), player.getPosY(), player.getPosX(), novaPosY); // Atualiza a posição depois de coletar o ouro
                 System.out.println("Posicao do Jogador X: " + player.getPosX() + ", Posicao Y: " + player.getPosY());
                 moverMonstroRapido();
@@ -80,20 +66,7 @@ public class Tabuleiro extends JFrame {
         botaoBaixo.addActionListener(e -> {
             int novaPosY = player.getPosY() - 1; // Calcula a nova posição Y após o movimento
             if (checkMove(player.getPosX(), novaPosY)) {
-                BotaoTabuleiro destino = botoesTabuleiro[player.getPosX()][novaPosY];
-                TipoDeItem tipoDeItem = destino.retornarItem();
-                switch (tipoDeItem) {
-                    case OURO:
-                        coletarOuro(destino); // Primeiro, coleta o ouro
-                        break;
-                    case MADEIRA:
-                        coletarMadeira(destino);
-                        break;
-                    case POCO:
-                        caiuPoco();
-                    default:
-                        break;
-                }
+                coletaItem(player.getPosX(), novaPosY);
                 atualizarPersonagem(player, COR_DESTAQUE_JOGADOR, player.getPosX(), player.getPosY(), player.getPosX(), novaPosY); // Atualiza a posição depois de coletar o ouro
                 System.out.println("Posicao do Jogador X: " + player.getPosX() + ", Posicao Y: " + player.getPosY());
                 moverMonstroRapido();
@@ -107,20 +80,7 @@ public class Tabuleiro extends JFrame {
         botaoDireita.addActionListener(e -> {
             int novaPosX = player.getPosX() + 1; // Calcula a nova posição Y após o movimento
             if (checkMove(novaPosX, player.getPosY())) {
-                BotaoTabuleiro destino = botoesTabuleiro[novaPosX][player.getPosY()];
-                TipoDeItem tipoDeItem = destino.retornarItem();
-                switch (tipoDeItem) {
-                    case OURO:
-                        coletarOuro(destino); // Primeiro, coleta o ouro
-                        break;
-                    case MADEIRA:
-                        coletarMadeira(destino);
-                        break;
-                    case POCO:
-                        caiuPoco();
-                    default:
-                        break;
-                }
+                coletaItem(novaPosX, player.getPosY());
                 atualizarPersonagem(player, COR_DESTAQUE_JOGADOR, player.getPosX(), player.getPosY(), novaPosX, player.getPosY()); // Atualiza a posição depois de coletar o ouro
                 System.out.println("Posicao do Jogador X: " + player.getPosX() + ", Posicao Y: " + player.getPosY());
                 moverMonstroRapido();
@@ -134,20 +94,7 @@ public class Tabuleiro extends JFrame {
         botaoEsquerda.addActionListener(e -> {
             int novaPosX = player.getPosX() - 1; // Calcula a nova posição Y após o movimento
             if (checkMove(novaPosX, player.getPosY())) {
-                BotaoTabuleiro destino = botoesTabuleiro[novaPosX][player.getPosY()];
-                TipoDeItem tipoDeItem = destino.retornarItem();
-                switch (tipoDeItem) {
-                    case OURO:
-                        coletarOuro(destino); // Primeiro, coleta o ouro
-                        break;
-                    case MADEIRA:
-                        coletarMadeira(destino);
-                        break;
-                     case POCO:
-                        caiuPoco();
-                    default:
-                        break;
-                }
+                coletaItem(novaPosX, player.getPosY());
                 atualizarPersonagem(player, COR_DESTAQUE_JOGADOR, player.getPosX(), player.getPosY(), novaPosX, player.getPosY()); // Atualiza a posição depois de coletar o ouro
                 System.out.println("Posicao do Jogador X: " + player.getPosX() + ", Posicao Y: " + player.getPosY());
                 moverMonstroRapido();
@@ -217,6 +164,8 @@ public class Tabuleiro extends JFrame {
                 }
             }
         } while (!moveu);
+
+        // testa se encontoru o jogador
     }
 
 
@@ -280,6 +229,8 @@ public class Tabuleiro extends JFrame {
                 }
             }
         } while (!moveu);
+
+        // testa se encontoru o jogador
     }
 
     private boolean checkMove(int x, int y) {
@@ -343,6 +294,24 @@ public class Tabuleiro extends JFrame {
                 System.out.println("Ouro " + i + ": " + ouroX + " " + ouroY);
                 i++;
             }
+        }
+    }
+
+    private void coletaItem(int novoX, int novoY) {
+        BotaoTabuleiro destino = botoesTabuleiro[novoX][novoY];
+        TipoDeItem tipoDeItem = destino.retornarItem();
+        switch (tipoDeItem) {
+            case OURO:
+                coletarOuro(destino); // Primeiro, coleta o ouro
+                break;
+            case MADEIRA:
+                coletarMadeira(destino);
+                break;
+            case POCO:
+                caiuPoco();
+                break;
+            default:
+                break;
         }
     }
 
