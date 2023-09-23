@@ -61,8 +61,9 @@ public class BotaoTabuleiro extends JButton {
             this.setBackground(color);
             this.escondido = false;
             return;
+        } else {
+            System.out.println("Adicionando monstro: " + personagem);
         }
-        System.out.println("Adicionando monstro: " + personagem);
         if (!this.escondido) {
             this.setBackground(color);
         }
@@ -71,14 +72,19 @@ public class BotaoTabuleiro extends JButton {
     public void removerPersonagem() {
         if (personagem.getClass().getSimpleName().equals(Jogador.class.getSimpleName())) {
             System.out.println("Removendo jogador: " + personagem);
+        } else {
+            System.out.println("Removendo monstro: " + personagem);
         }
-        System.out.println("Removendo monstro: " + personagem);
         atualizaBackground();
         this.personagem = null;
     }
 
     public Personagem retornarPersonagem() {
         return this.personagem;
+    }
+
+    public boolean temJogador() {
+        return personagem.getClass().getSimpleName().equals(Jogador.class.getSimpleName());
     }
 
     public void adicionarItem(TipoDeItem item, Color color) {
@@ -89,7 +95,7 @@ public class BotaoTabuleiro extends JButton {
     }
 
     public void removerItem() {
-        this.item = null;
+        this.item = VAZIO;
         setBackground(Color.WHITE);
     }
 

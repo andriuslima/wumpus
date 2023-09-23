@@ -64,14 +64,15 @@ public class Jogador implements Personagem {
 
    public boolean temEspacoNaMochila() {
         return (quantidadeMadeira + quantidadeArco + quantidadeFlecha + quantidadeLanterna + quantidadeOuro) < capacidadeMochila;
-//       return false;
    }
    
    public boolean adicionarOuro() {
         if (temEspacoNaMochila()) {
             quantidadeOuro++;
+            System.out.println("O jogador coletou Ouro. Total de Ouro: " + this.getQuantidadeOuro());
             return true;
         } else {
+            System.out.println("Mochila cheia, não coletou o ouro");
             return false;
         }
    }
@@ -86,6 +87,13 @@ public class Jogador implements Personagem {
             return false;
         }
    }
-   
+
+    public int getVida() {
+        return vida;
+    }
+
+    public void setVida(int vida) {
+       this.vida = vida;
+    }
 }
 
