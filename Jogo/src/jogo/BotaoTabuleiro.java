@@ -5,42 +5,43 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import static jogo.TipoDeItem.VAZIO;
 
 public class BotaoTabuleiro extends JButton {
-    private boolean temAlguemAqui = false;
     private int posX;
     private int posY;
-    private TipoDeItem tipo;
     private boolean escondido;
-    private ArrayList<Personagem> listaPersonagem;
-    private ArrayList<ItensTabuleiro> listaItens;
+    private Personagem personagem = null;
+    private TipoDeItem item = VAZIO;
+    
     
     public BotaoTabuleiro(int i, int j) {
         this.posX = i;
         this.posY = j;
         int x = i * 42;
         int y = (14 - j) * 42; // Ajuste para inverter a ordem das linhas
-        tipo = TipoDeItem.VAZIO;
-        listaItens = new ArrayList<ItensTabuleiro>();
-        listaPersonagem = new ArrayList<Personagem>();
         this.setBounds(x, y, 42, 42);
         this.setOpaque(true);
         this.setBorderPainted(true);
-        this.setBackground(Color.white);
+        this.setBackground(Color.gray);
+        this.escondido = true;
         this.addActionListener(e -> {
             BotaoTabuleiro botao = (BotaoTabuleiro) e.getSource();
+            System.out.println("\n");
+            System.out.println("-----------------------");
             System.out.println("Posicao X: " + botao.getPosX());
             System.out.println("Posicao Y: " + botao.getPosY());
+             System.out.println("Escondido: " + botao.escondido);
             System.out.println("Tem Alguem Aqui: " + botao.temAlguemAqui());
-            System.out.println("Tipo de Item: " + botao.getTipoDeItem());
+//            System.out.println("Tipo de Item: " + botao.());
             System.out.println("------------------------------------");
         });
         
-        if(i+j == 0){
-            escondido = false;
-        }else {
-            escondido = false;
-        }
+//        if(i+j == 0){
+//            escondido = false;
+//        }else {
+//            escondido = false;
+//        }
     }
 
     public int getPosX() {
@@ -52,42 +53,41 @@ public class BotaoTabuleiro extends JButton {
     }
 
     public boolean temAlguemAqui() {
-        return this.temAlguemAqui;
+       if (this.personagem != null){
+           return true;
+       }else if(this.item != VAZIO){
+           return true;
+       }
+       return false;
+      
     }
     
-    public void adicionarDestaque(Color color) {
-        this.setBackground(color);
-        this.temAlguemAqui = true;
-    }
+//    public void adicionarDestaque(Color color) {
+//        this.setBackground(color);
+//      //  this.temAlguemAqui = true;
+//    }
+//
+//    public void adcionarDestaqueItem(Color color) {
+//        this.setBackground(color);
+//      //  this.temAlguemAqui = false;
+//    }
+//
+//    public void removerDestaque() {
+//        this.setBackground(Color.white);
+//        //this.temAlguemAqui = false;
+//    }
 
-    public void adcionarDestaqueItem(Color color) {
-        this.setBackground(color);
-        this.temAlguemAqui = false;
-    }
-
-    public void removerDestaque() {
-        this.setBackground(Color.white);
-        this.temAlguemAqui = false;
-    }
-
-    public enum TipoDeItem {
-        VAZIO, POCO, MADEIRA, OURO
-    }
     
-    public enum TipoDePersonagem {
-        VAZIO, JOGADOR, MONSTRO_RAPIDO, MONSTRO_NORMAL
-    }
-    
-    public TipoDeItem getTipoDeItem() {
-        return tipo;
-    }
-
-    public void setTipoDeItem(TipoDeItem tipo) {
-        this.tipo = tipo;
-    }
+//    public TipoDeItem getTipoDeItem() {
+//        return tipo;
+//    }
+//
+//    public void setTipoDeItem(TipoDeItem tipo) {
+//        this.tipo = tipo;
+//    }
         
     public void setTemAlguemAqui(boolean temAlguemAqui) {
-        this.temAlguemAqui = temAlguemAqui;
+      //  this.temAlguemAqui = temAlguemAqui;
     }
     
     public boolean getEscondido(){
@@ -98,27 +98,48 @@ public class BotaoTabuleiro extends JButton {
         this.escondido = escondido;
     }
     
-    public void adicionarPersonagem(Personagem personagem){
-        listaPersonagem.add(personagem);
+    public void adicionarPersonagem(Personagem personagem, Color color){
+       this.personagem = personagem;
+       
+       if(personagem.getClass().isInstance(new Jogador(0))){
+           this.setBackground(color);
+           this.escondido = false;
+       }else if(this.escondido = false){
+           this.setBackground(color);
+       }
+     
     }
     
-    public void removerPersonagem(Personagem personagem){
-        listaPersonagem.remove(personagem);
+    public void removerPersonagem(){
+       if(personagem.getClass().isInstance(new Jogador(0))){
+           this.setBackground(Color.WHITE);
+           this.escondido = false;
+           System.out.println("Personagem: " + Personagem.class);
+       }else if(escondido == false){
+           this.setBackground(Color.WHITE);
+       } 
+       this.personagem = null;
     }
     
-    public ArrayList<Personagem> retornarPersonagem (){
-        return listaPersonagem;
+    public Personagem retornarPersonagem (){
+       return this.personagem;
     }
     
-    public void adicionarItem(ItensTabuleiro itens){
-        listaItens.add(itens);
+    public void adicionarItem(TipoDeItem item, Color color){
+        this.item = item;
+        
+        if(escondido == false){
+            this.setBackground(color);
+        }
+        
     }
     
-    public void removerItem(ItensTabuleiro itens){
-        listaItens.remove(itens);
+    public void removerItem(){
+        this.item = null;
+        setBackground(Color.WHITE);
     }
     
-    public ArrayList<ItensTabuleiro> retornarItem (){
-        return listaItens;
+    public TipoDeItem retornarItem (){
+        return this.item;
     }
 }
