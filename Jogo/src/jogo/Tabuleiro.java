@@ -2,10 +2,6 @@ package jogo;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 
@@ -15,22 +11,19 @@ public class Tabuleiro extends JFrame {
     private static final Color COR_DESTAQUE_OURO = Color.MAGENTA;
     private static final Color COR_DESTAQUE_JOGADOR = Color.YELLOW;
     private static final Color COR_DESTAQUE_MONSTRO = Color.BLACK;
-    private static final Color COR_DESTAQUE_CINZA = Color.GRAY;
     private static final Color COR_DESTAQUE_MONSTRO_RAPIDO = Color.RED;
-    private final List<ItemTabuleiro> itensT = new ArrayList<>();
-    private final List<ItensInventario> itens = new ArrayList<>();
     private final BotaoTabuleiro[][] botoesTabuleiro = new BotaoTabuleiro[15][15];
     private final MonstroLento monstroLento = new MonstroLento();
     private final MonstroRapido monstroRapido = new MonstroRapido();
-    private Jogador player = new Jogador(3);
     private final JButton botaoCima;
     private final JButton botaoBaixo;
     private final JButton botaoEsquerda;
     private final JButton botaoDireita;
+    private Jogador player;
 
     public Tabuleiro() {
-        setDefaultCloseOperation(3);
-        setTitle("Teste");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Wumpus Game");
         setLayout(null);
         setBounds(165, 70, 900, 750);
         setPreferredSize(new Dimension(950, 700));
@@ -41,26 +34,21 @@ public class Tabuleiro extends JFrame {
             for (int i = 0; i < 15; i++) {
                 botoesTabuleiro[i][j] = new BotaoTabuleiro(i, j);
                 add(botoesTabuleiro[i][j]);
-                //botoesTabuleiro[i][j].setEscondido(true);
             }
         }
-        
-        player.setPosX(0);
-        player.setPosX(0);
+        this.player = new Jogador();
         botoesTabuleiro[0][0].adicionarPersonagem(player, COR_DESTAQUE_JOGADOR);
-        player.adicionarLanterna();
-        player.adicionarArco();
         criaPocos();
         criaOuro();
         criaMadeira();
         moverMonstroRapido();
         moverMonstroLento();
-        
-       
+
+
         botaoCima = new JButton("Cima");
         botaoCima.setBounds(650, 20, 100, 30);
         botaoCima.addActionListener(e -> {
-        int novaPosY = player.getPosY() + 1; // Calcula a nova posição Y após o movimento
+            int novaPosY = player.getPosY() + 1; // Calcula a nova posição Y após o movimento
             if (checkMove(player.getPosX(), novaPosY)) {
                 BotaoTabuleiro destino = botoesTabuleiro[player.getPosX()][novaPosY];
                 TipoDeItem tipoDeItem = destino.retornarItem();
@@ -74,12 +62,12 @@ public class Tabuleiro extends JFrame {
                     case POCO:
                         caiuPoco();
                         break;
-                     default:
+                    default:
                         break;
-                        
+
                 }
                 atualizarPersonagem(player, COR_DESTAQUE_JOGADOR, player.getPosX(), player.getPosY(), player.getPosX(), novaPosY); // Atualiza a posição depois de coletar o ouro
-                System.out.println("Posicao X: " + player.getPosX() + ", Posicao Y: " + player.getPosY());
+                System.out.println("Posicao do Jogador X: " + player.getPosX() + ", Posicao Y: " + player.getPosY());
                 moverMonstroRapido();
                 moverMonstroLento();
             } else System.out.println("Posicao invalida");
@@ -87,11 +75,10 @@ public class Tabuleiro extends JFrame {
         add(botaoCima);
 
 
-
         botaoBaixo = new JButton("Baixo");
         botaoBaixo.setBounds(650, 60, 100, 30);
         botaoBaixo.addActionListener(e -> {
-        int novaPosY = player.getPosY() - 1; // Calcula a nova posição Y após o movimento
+            int novaPosY = player.getPosY() - 1; // Calcula a nova posição Y após o movimento
             if (checkMove(player.getPosX(), novaPosY)) {
                 BotaoTabuleiro destino = botoesTabuleiro[player.getPosX()][novaPosY];
                 TipoDeItem tipoDeItem = destino.retornarItem();
@@ -108,7 +95,7 @@ public class Tabuleiro extends JFrame {
                         break;
                 }
                 atualizarPersonagem(player, COR_DESTAQUE_JOGADOR, player.getPosX(), player.getPosY(), player.getPosX(), novaPosY); // Atualiza a posição depois de coletar o ouro
-                System.out.println("Posicao X: " + player.getPosX() + ", Posicao Y: " + player.getPosY());
+                System.out.println("Posicao do Jogador X: " + player.getPosX() + ", Posicao Y: " + player.getPosY());
                 moverMonstroRapido();
                 moverMonstroLento();
             } else System.out.println("Posicao invalida");
@@ -119,7 +106,7 @@ public class Tabuleiro extends JFrame {
         botaoDireita.setBounds(650, 100, 100, 30);
         botaoDireita.addActionListener(e -> {
             int novaPosX = player.getPosX() + 1; // Calcula a nova posição Y após o movimento
-            if (checkMove(novaPosX,player.getPosY())) {
+            if (checkMove(novaPosX, player.getPosY())) {
                 BotaoTabuleiro destino = botoesTabuleiro[novaPosX][player.getPosY()];
                 TipoDeItem tipoDeItem = destino.retornarItem();
                 switch (tipoDeItem) {
@@ -129,11 +116,13 @@ public class Tabuleiro extends JFrame {
                     case MADEIRA:
                         coletarMadeira(destino);
                         break;
+                    case POCO:
+                        caiuPoco();
                     default:
                         break;
                 }
-                atualizarPersonagem(player, COR_DESTAQUE_JOGADOR, player.getPosX(), player.getPosY(),novaPosX , player.getPosY()); // Atualiza a posição depois de coletar o ouro
-                System.out.println("Posicao X: " + player.getPosX() + ", Posicao Y: " + player.getPosY());
+                atualizarPersonagem(player, COR_DESTAQUE_JOGADOR, player.getPosX(), player.getPosY(), novaPosX, player.getPosY()); // Atualiza a posição depois de coletar o ouro
+                System.out.println("Posicao do Jogador X: " + player.getPosX() + ", Posicao Y: " + player.getPosY());
                 moverMonstroRapido();
                 moverMonstroLento();
             } else System.out.println("Posicao invalida");
@@ -144,7 +133,7 @@ public class Tabuleiro extends JFrame {
         botaoEsquerda.setBounds(650, 140, 100, 30);
         botaoEsquerda.addActionListener(e -> {
             int novaPosX = player.getPosX() - 1; // Calcula a nova posição Y após o movimento
-            if (checkMove( novaPosX, player.getPosY())) {
+            if (checkMove(novaPosX, player.getPosY())) {
                 BotaoTabuleiro destino = botoesTabuleiro[novaPosX][player.getPosY()];
                 TipoDeItem tipoDeItem = destino.retornarItem();
                 switch (tipoDeItem) {
@@ -154,11 +143,13 @@ public class Tabuleiro extends JFrame {
                     case MADEIRA:
                         coletarMadeira(destino);
                         break;
+                     case POCO:
+                        caiuPoco();
                     default:
                         break;
                 }
-                atualizarPersonagem(player, COR_DESTAQUE_JOGADOR, player.getPosX(), player.getPosY(), novaPosX, player.getPosY() ); // Atualiza a posição depois de coletar o ouro
-                System.out.println("Posicao X: " + player.getPosX() + ", Posicao Y: " + player.getPosY());
+                atualizarPersonagem(player, COR_DESTAQUE_JOGADOR, player.getPosX(), player.getPosY(), novaPosX, player.getPosY()); // Atualiza a posição depois de coletar o ouro
+                System.out.println("Posicao do Jogador X: " + player.getPosX() + ", Posicao Y: " + player.getPosY());
                 moverMonstroRapido();
                 moverMonstroLento();
             } else System.out.println("Posicao invalida");
@@ -168,15 +159,11 @@ public class Tabuleiro extends JFrame {
         setVisible(true);
     }
 
+
     private void atualizarPersonagem(Personagem p, Color c, int xAntigo, int yAntigo, int xNovo, int yNovo) {
-        
         botoesTabuleiro[xNovo][yNovo].adicionarPersonagem(p, c);
         botoesTabuleiro[xAntigo][yAntigo].removerPersonagem();
-       
-        
-//        checaItemTabuleiro(xAntigo,yAntigo);
-//        checaItemTabuleiro(xNovo,yNovo);
-        
+
         p.setPosX(xNovo);
         p.setPosY(yNovo);
 
@@ -185,59 +172,52 @@ public class Tabuleiro extends JFrame {
     }
 
     private void atualizarMonstro(Personagem m, Color c, int xAntigo, int yAntigo, int xNovo, int yNovo) {
-        
-//        if(botoesTabuleiro[xNovo][yNovo].getEscondido() == false){
-//            botoesTabuleiro[xNovo][yNovo].adicionarDestaque(c);
-//        } 
         botoesTabuleiro[xNovo][yNovo].adicionarPersonagem(m, c);
 
-        if(botoesTabuleiro[xAntigo][yAntigo].retornarPersonagem()!= null){
+        if (botoesTabuleiro[xAntigo][yAntigo].retornarPersonagem() != null) {
             botoesTabuleiro[xAntigo][yAntigo].removerPersonagem();
         }
 
-//        checaItemTabuleiro(xAntigo,yAntigo);
-//        checaItemTabuleiro(xNovo,yNovo);
-        
         m.setPosX(xNovo);
         m.setPosY(yNovo);
-        System.out.println("Nova posicao de " + m.getClass().getSimpleName() + " -> x :" + m.getPosX() + " Posicao y: " + m.getPosY());    
+        System.out.println("Nova posicao de " + m.getClass().getSimpleName() + " -> x :" + m.getPosX() + " Posicao y: " + m.getPosY());
     }
 
     private void moverMonstroLento() {
-    Random random = new Random();
-    boolean moveu = false;
-    int minimo = 0;
-    int maximo = 3;
-    do {
-        int num = random.nextInt(maximo - minimo + 1) + minimo;
-        switch (num) {
-            case 0 -> {
-                if (checkMove(monstroLento.getPosY(), monstroLento.getPosY() + 1)) {
-                    atualizarMonstro(monstroLento, COR_DESTAQUE_MONSTRO, monstroLento.posX, monstroLento.posY, monstroLento.posX, monstroLento.posY + 1);
-                    moveu = true;
+        Random random = new Random();
+        boolean moveu = false;
+        int minimo = 0;
+        int maximo = 3;
+        do {
+            int num = random.nextInt(maximo - minimo + 1) + minimo;
+            switch (num) {
+                case 0 -> {
+                    if (checkMoveMonstro(monstroLento.getPosY(), monstroLento.getPosY() + 1)) {
+                        atualizarMonstro(monstroLento, COR_DESTAQUE_MONSTRO, monstroLento.posX, monstroLento.posY, monstroLento.posX, monstroLento.posY + 1);
+                        moveu = true;
+                    }
+                }
+                case 1 -> {
+                    if (checkMoveMonstro(monstroLento.getPosY(), monstroLento.getPosY() - 1)) {
+                        atualizarMonstro(monstroLento, COR_DESTAQUE_MONSTRO, monstroLento.posX, monstroLento.posY, monstroLento.posX, monstroLento.posY - 1);
+                        moveu = true;
+                    }
+                }
+                case 2 -> {
+                    if (checkMoveMonstro(monstroLento.getPosX() - 1, monstroLento.getPosY())) {
+                        atualizarMonstro(monstroLento, COR_DESTAQUE_MONSTRO, monstroLento.posX, monstroLento.posY, monstroLento.posX - 1, monstroLento.posY);
+                        moveu = true;
+                    }
+                }
+                case 3 -> {
+                    if (checkMoveMonstro(monstroLento.getPosX() + 1, monstroLento.getPosY())) {
+                        atualizarMonstro(monstroLento, COR_DESTAQUE_MONSTRO, monstroLento.posX, monstroLento.posY, monstroLento.posX + 1, monstroLento.posY);
+                        moveu = true;
+                    }
                 }
             }
-            case 1 -> {
-                if (checkMove(monstroLento.getPosY(), monstroLento.getPosY() - 1)) {
-                    atualizarMonstro(monstroLento, COR_DESTAQUE_MONSTRO, monstroLento.posX, monstroLento.posY, monstroLento.posX, monstroLento.posY - 1);
-                    moveu = true;
-                }
-            }
-            case 2 -> {
-                if (checkMove(monstroLento.getPosX() - 1, monstroLento.getPosY())) {
-                    atualizarMonstro(monstroLento, COR_DESTAQUE_MONSTRO, monstroLento.posX, monstroLento.posY, monstroLento.posX - 1, monstroLento.posY);
-                    moveu = true;
-                }
-            }
-            case 3 -> {
-                if (checkMove(monstroLento.getPosX() + 1, monstroLento.getPosY())) {
-                    atualizarMonstro(monstroLento, COR_DESTAQUE_MONSTRO, monstroLento.posX, monstroLento.posY, monstroLento.posX + 1, monstroLento.posY);
-                    moveu = true;
-                }
-            }
-        }
-    } while (!moveu);
-}
+        } while (!moveu);
+    }
 
 
     private void moverMonstroRapido() {
@@ -251,49 +231,49 @@ public class Tabuleiro extends JFrame {
             num = random.nextInt(maximo - minimo + 1) + minimo;
             switch (num) {
                 case 0 -> {
-                    if (checkMove(monstroRapido.getPosX() - 1, monstroRapido.getPosY() + 2)) {
+                    if (checkMoveMonstro(monstroRapido.getPosX() - 1, monstroRapido.getPosY() + 2)) {
                         atualizarMonstro(monstroRapido, COR_DESTAQUE_MONSTRO_RAPIDO, monstroRapido.getPosX(), monstroRapido.getPosY(), monstroRapido.getPosX() - 1, monstroRapido.getPosY() + 2);
                         moveu = true;
                     }
                 }
                 case 1 -> {
-                    if (checkMove(monstroRapido.getPosX() + 1, monstroRapido.getPosY() + 2)) {
+                    if (checkMoveMonstro(monstroRapido.getPosX() + 1, monstroRapido.getPosY() + 2)) {
                         atualizarMonstro(monstroRapido, COR_DESTAQUE_MONSTRO_RAPIDO, monstroRapido.getPosX(), monstroRapido.getPosY(), monstroRapido.getPosX() + 1, monstroRapido.getPosY() + 2);
                         moveu = true;
                     }
                 }
                 case 2 -> {
-                    if (checkMove(monstroRapido.getPosX() - 2, monstroRapido.getPosY() + 1)) {
+                    if (checkMoveMonstro(monstroRapido.getPosX() - 2, monstroRapido.getPosY() + 1)) {
                         atualizarMonstro(monstroRapido, COR_DESTAQUE_MONSTRO_RAPIDO, monstroRapido.getPosX(), monstroRapido.getPosY(), monstroRapido.getPosX() - 2, monstroRapido.getPosY() + 1);
                         moveu = true;
                     }
                 }
                 case 3 -> {
-                    if (checkMove(monstroRapido.getPosX() - 2, monstroRapido.getPosY() - 1)) {
+                    if (checkMoveMonstro(monstroRapido.getPosX() - 2, monstroRapido.getPosY() - 1)) {
                         atualizarMonstro(monstroRapido, COR_DESTAQUE_MONSTRO_RAPIDO, monstroRapido.getPosX(), monstroRapido.getPosY(), monstroRapido.getPosX() - 2, monstroRapido.getPosY() - 1);
                         moveu = true;
                     }
                 }
                 case 4 -> {
-                    if (checkMove(monstroRapido.getPosX() + 2, monstroRapido.getPosY() + 1)) {
+                    if (checkMoveMonstro(monstroRapido.getPosX() + 2, monstroRapido.getPosY() + 1)) {
                         atualizarMonstro(monstroRapido, COR_DESTAQUE_MONSTRO_RAPIDO, monstroRapido.getPosX(), monstroRapido.getPosY(), monstroRapido.getPosX() + 2, monstroRapido.getPosY() + 1);
                         moveu = true;
                     }
                 }
                 case 5 -> {
-                    if (checkMove(monstroRapido.getPosX() + 2, monstroRapido.getPosY() - 1)) {
+                    if (checkMoveMonstro(monstroRapido.getPosX() + 2, monstroRapido.getPosY() - 1)) {
                         atualizarMonstro(monstroRapido, COR_DESTAQUE_MONSTRO_RAPIDO, monstroRapido.getPosX(), monstroRapido.getPosY(), monstroRapido.getPosX() + 2, monstroRapido.getPosY() - 1);
                         moveu = true;
                     }
                 }
                 case 6 -> {
-                    if (checkMove(monstroRapido.getPosX() + 1, monstroRapido.getPosY() - 2)) {
+                    if (checkMoveMonstro(monstroRapido.getPosX() + 1, monstroRapido.getPosY() - 2)) {
                         atualizarMonstro(monstroRapido, COR_DESTAQUE_MONSTRO_RAPIDO, monstroRapido.getPosX(), monstroRapido.getPosY(), monstroRapido.getPosX() + 1, monstroRapido.getPosY() - 2);
                         moveu = true;
                     }
                 }
                 case 7 -> {
-                    if (checkMove(monstroRapido.getPosX() - 1, monstroRapido.getPosY() - 2)) {
+                    if (checkMoveMonstro(monstroRapido.getPosX() - 1, monstroRapido.getPosY() - 2)) {
                         atualizarMonstro(monstroRapido, COR_DESTAQUE_MONSTRO_RAPIDO, monstroRapido.getPosX(), monstroRapido.getPosY(), monstroRapido.getPosX() - 1, monstroRapido.getPosY() - 2);
                         moveu = true;
                     }
@@ -305,67 +285,49 @@ public class Tabuleiro extends JFrame {
     private boolean checkMove(int x, int y) {
         return (x <= 14 && x >= 0 && y <= 14 && y >= 0);
     }
-    
-//    private void debugTabuleiro(){
-//        for (int j = 14; j >= 0; j--) {
-//            for (int i = 0; i < 15; i++) {
-//                botoesTabuleiro[i][j].setEscondido(false);
-//                switch:
-//                        case:   
-//                botoesTabuleiro[i][j].adcionarDestaqueItem(COR_DESTAQUE_CINZA);
-//            }
-//        }
-//    }
-//        
-    
-//    private void atualizaItemTabuleiro(int x, int y){
-//        if(botoesTabuleiro[x][y].getEscondido()== true){
-//            botoesTabuleiro[x][y].adcionarDestaqueItem(COR_DESTAQUE_CINZA);
-//        }else if(botoesTabuleiro[x][y].getEscondido()== false){
-//            botoesTabuleiro[x][y].removerDestaque();
-//        }
-//    }
-    
-    public void criaPocos(){
 
+    private boolean checkMoveMonstro(int x, int y) {
+        return (x <= 14 && x >= 0 && y <= 14 && y >= 0) && botoesTabuleiro[x][y].retornarItem() != TipoDeItem.POCO;
+    }
+
+    public void criaPocos() {
         Random random = new Random();
         int i = 0;
         int min = 0;
         int max = 14;
-        
-        while(i < 5){
-                   
+
+        while (i < 5) {
             int pocoX = random.nextInt(max - min + 1) + min;
             int pocoY = random.nextInt(max - min + 1) + min;
 
-            if(!botoesTabuleiro[pocoX][pocoY].temAlguemAqui()){
+            if (!botoesTabuleiro[pocoX][pocoY].temAlguemAqui()) {
                 botoesTabuleiro[pocoX][pocoY].adicionarItem(TipoDeItem.POCO, COR_DESTAQUE_POCO);
+                System.out.println("Poço " + i + ": " + pocoX + " " + pocoY);
                 i++;
             }
-
         }
     }
-        
 
-    public void criaMadeira(){
-        
+
+    public void criaMadeira() {
         Random random = new Random();
-        int i=0;
+        int i = 0;
         int min = 0;
         int max = 14;
-        
-        while(i<2){
-            
+
+        while (i < 2) {
+
             int madeiraX = random.nextInt(max - min + 1) + min;
             int madeiraY = random.nextInt(max - min + 1) + min;
-            
-            if(!botoesTabuleiro[madeiraX][madeiraY].temAlguemAqui()){
+
+            if (!botoesTabuleiro[madeiraX][madeiraY].temAlguemAqui()) {
                 botoesTabuleiro[madeiraX][madeiraY].adicionarItem(TipoDeItem.MADEIRA, COR_DESTAQUE_MADEIRA);
                 i++;
+                System.out.println("Madeira " + i + ": " + madeiraX + " " + madeiraY);
             }
         }
     }
-    
+
     public void criaOuro() {
         Random random = new Random();
         int i = 0;
@@ -378,33 +340,37 @@ public class Tabuleiro extends JFrame {
 
             if (!botoesTabuleiro[ouroX][ouroY].temAlguemAqui()) {
                 botoesTabuleiro[ouroX][ouroY].adicionarItem(TipoDeItem.OURO, COR_DESTAQUE_OURO);
+                System.out.println("Ouro " + i + ": " + ouroX + " " + ouroY);
                 i++;
             }
         }
     }
-    
+
     private void coletarOuro(BotaoTabuleiro botaoOuro) {
-        botaoOuro.removerItem();
-        player.adicionarOuro(); // Incrementa a quantidade de ouro do jogador
+        boolean adicionou = player.adicionarOuro();
+        if (adicionou) {
+            botaoOuro.removerItem();
+        }
         System.out.println("\n");
         System.out.println("O jogador coletou ouro. Total de ouro: " + player.getQuantidadeOuro());
     }
-    
+
     private void coletarMadeira(BotaoTabuleiro botaoMadeira) {
-        botaoMadeira.removerItem(); // Remove o destaque da Madeira no botão
-        player.adicionarMadeira(); // Incrementa a quantidade de Madeira do jogador
-        System.out.println("\n");
-        System.out.println("O jogador coletou Madeira. Total de Madeira: " + player.getQuantidadeMadeira());
+        boolean adicionou = player.adicionarMadeira(); // Incrementa a quantidade de Madeira do jogador
+        if (adicionou) {
+            botaoMadeira.removerItem(); // Remove o destaque da Madeira no botão
+        }
     }
+
     private void caiuPoco() {
         //botaoPoco.removerDestaque(); // Remove o destaque da Madeira no botão
         //botaoPoco.setTipoDeItem(BotaoTabuleiro.TipoDeItem.VAZIO); // Marca o botão como vazio
         //player.adicionarMadeira(); // Incrementa a quantidade de Madeira do jogador
         System.out.println("\n");
-        System.out.println("O jogador caiu num poco.  " );
+        System.out.println("O jogador caiu num poco.  ");
     }
 
-      
+
 }
 
 // #############################
