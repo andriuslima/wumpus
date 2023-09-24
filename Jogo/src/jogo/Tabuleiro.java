@@ -159,7 +159,17 @@ public class Tabuleiro extends JFrame {
                     System.exit(0);
                 }
         }
-
+        if(jogadorPoco(novoX, novoY)) {
+            JOptionPane.showMessageDialog(null, "Você caiu em um poço, fim de jogo!", "Game Over", JOptionPane.WARNING_MESSAGE);
+            player.setVida(0);
+            atualizaCampoVida();
+            int escolha = JOptionPane.showOptionDialog(this, "Deseja recomeçar uma nova partida? ", "Escolha", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Recomeçar", "Sair"}, "Recomeçar");
+            if (escolha == JOptionPane.YES_OPTION) {
+                recomecarJogo();
+            } else {
+                System.exit(0);
+            }
+        }
         if (posicaoValida(novoX, novoY)) {
             atualizaPosicaoJogador(novoX, novoY);
             if (player.getVida() > 0) {
@@ -479,9 +489,6 @@ public class Tabuleiro extends JFrame {
             case MADEIRA:
                 coletarMadeira(destino);
                 break;
-            case POCO:
-                caiuPoco();
-                break;
             default:
                 break;
         }
@@ -499,14 +506,6 @@ public class Tabuleiro extends JFrame {
         if (adicionou) {
             botaoMadeira.removerItem();
         }
-    }
-
-    private void caiuPoco() {
-        //botaoPoco.removerDestaque(); // Remove o destaque da Madeira no botão
-        //botaoPoco.setTipoDeItem(BotaoTabuleiro.TipoDeItem.VAZIO); // Marca o botão como vazio
-        //player.adicionarMadeira(); // Incrementa a quantidade de Madeira do jogador
-        System.out.println("\n");
-        System.out.println("O jogador caiu num poco.  ");
     }
 
     private void atualizaCampoVida() {
@@ -538,4 +537,29 @@ public class Tabuleiro extends JFrame {
                 }
             }
     }
+    private boolean jogadorPoco(int x, int y){
+        BotaoTabuleiro destino = botoesTabuleiro[x][y];
+        if(destino.retornarItem() == TipoDeItem.POCO){
+            if(player.getQuantidadeMadeira() == 0)
+                return true;
+            else {
+                JOptionPane.showMessageDialog(null, "Você caiu em um poço mas tinha madeira (-1 madeira no inventario)", "Game Over", JOptionPane.WARNING_MESSAGE);
+                destino.removerItem();
+                player.setQuantidadeMadeira(player.getQuantidadeMadeira() - 1);
+                return false;
+            }
+        }
+        return false;
+    }
+
+//    private void brisa(int x,int y){
+//        BotaoTabuleiro destino = botoesTabuleiro[x][y];
+//        boolean teste = false;
+//        if(destino.retornarItem() == TipoDeItem.POCO)
+//            teste = true;
+//        if(destino.getPosX() - 1 == destino // == (destino.retornarItem() == TipoDeItem.POCO))
+//    }
+
 }
+
+
