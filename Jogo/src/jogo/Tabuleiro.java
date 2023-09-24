@@ -6,6 +6,7 @@ import java.util.Random;
 
 
 public class Tabuleiro extends JFrame {
+    private boolean debug = false;
     private static final Color COR_DESTAQUE_POCO = Color.BLUE;
     private static final Color COR_DESTAQUE_MADEIRA = Color.GREEN;
     private static final Color COR_DESTAQUE_OURO = Color.MAGENTA;
@@ -22,6 +23,7 @@ public class Tabuleiro extends JFrame {
     private final JButton botaoFinalizar;
     private final JButton botaoCriaFlecha;
     private final JButton botaoRecomecar;
+    private final JButton botaoDebug;
     private final JLabel campoVida;
     private final JLabel campoMadeira;
     private final JLabel campoOuro;
@@ -30,7 +32,6 @@ public class Tabuleiro extends JFrame {
     private int nJogadas = 0;
 
     public Tabuleiro() {
-        
             setDefaultCloseOperation(EXIT_ON_CLOSE);
             setTitle("Wumpus Game");
             setLayout(null);
@@ -41,7 +42,7 @@ public class Tabuleiro extends JFrame {
 
             for (int j = 14; j >= 0; j--) {
                 for (int i = 0; i < 15; i++) {
-                    botoesTabuleiro[i][j] = new BotaoTabuleiro(i, j);
+                    botoesTabuleiro[i][j] = new BotaoTabuleiro(i, j, debug);
                     add(botoesTabuleiro[i][j]);
                 }
             }
@@ -72,6 +73,10 @@ public class Tabuleiro extends JFrame {
             moverMonstroRapido();
             moverMonstroLento();
 
+            botaoDebug = new JButton("Debug");
+            botaoDebug.setBounds(750, 605, 100, 30);
+            botaoDebug.addActionListener(e -> this.toggleDebug());
+            add(botaoDebug);
 
             botaoFinalizar = new JButton("Sair");
             botaoFinalizar.setBounds(650, 605, 100, 30);
@@ -450,6 +455,17 @@ public class Tabuleiro extends JFrame {
         this.campoMadeira.setText("Madeira: " + this.player.getQuantidadeMadeira());
         this.campoOuro.setText("Ouro: " + this.player.getQuantidadeOuro());
         this.campoFlecha.setText("Flecha: " + this.player.getQuantidadeFlecha());
+    }
+
+    public void toggleDebug() {
+        this.debug = !this.debug;
+        System.out.println("Debug set to: " + this.debug);
+
+        for (int j = 14; j >= 0; j--) {
+                for (int i = 0; i < 15; i++) {
+                    botoesTabuleiro[i][j].setDebug(this.debug);
+                }
+            }
     }
 
 }
