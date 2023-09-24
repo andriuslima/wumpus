@@ -6,7 +6,6 @@ import java.util.Random;
 
 
 public class Tabuleiro extends JFrame {
-    private boolean debug = false;
     private static final Color COR_DESTAQUE_POCO = Color.BLUE;
     private static final Color COR_DESTAQUE_MADEIRA = Color.GREEN;
     private static final Color COR_DESTAQUE_OURO = Color.MAGENTA;
@@ -24,11 +23,8 @@ public class Tabuleiro extends JFrame {
     private final JButton botaoCriaFlecha;
     private final JButton botaoLanterna;
     private final JButton botaoRecomecar;
-<<<<<<< Updated upstream
-    private final JButton botaoDebug;
-=======
     private final JButton botaoDescartarItem;
->>>>>>> Stashed changes
+    private final JButton botaoDebug;
     private final JLabel campoVida;
     private final JLabel campoArco;
     private final JLabel campoLanterna;
@@ -36,9 +32,11 @@ public class Tabuleiro extends JFrame {
     private final JLabel campoOuro;
     private final JLabel campoFlecha;
     private final Jogador player;
+    private boolean debug = false;
     private int nJogadas = 0;
 
     public Tabuleiro() {
+        
             setDefaultCloseOperation(EXIT_ON_CLOSE);
             setTitle("Wumpus Game");
             setLayout(null);
@@ -80,6 +78,11 @@ public class Tabuleiro extends JFrame {
             this.campoLanterna = new JLabel("Cargas Lanterna: " + this.player.getBateriaLanterna());
             this.campoLanterna.setBounds(650, 325, 108, 30);
             add(this.campoLanterna);
+            
+            botaoDebug = new JButton("Debug");
+            botaoDebug.setBounds(750, 605, 100, 30);
+            botaoDebug.addActionListener(e -> this.toggleDebug());
+            add(botaoDebug);
 
 
             botoesTabuleiro[0][0].adicionarPersonagem(player, COR_DESTAQUE_JOGADOR);
@@ -89,10 +92,6 @@ public class Tabuleiro extends JFrame {
             moverMonstroRapido();
             moverMonstroLento();
 
-            botaoDebug = new JButton("Debug");
-            botaoDebug.setBounds(750, 605, 100, 30);
-            botaoDebug.addActionListener(e -> this.toggleDebug());
-            add(botaoDebug);
 
             botaoFinalizar = new JButton("Sair");
             botaoFinalizar.setBounds(650, 605, 100, 30);
@@ -539,5 +538,4 @@ public class Tabuleiro extends JFrame {
                 }
             }
     }
-
 }

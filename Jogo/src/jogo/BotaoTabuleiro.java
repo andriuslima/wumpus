@@ -30,6 +30,7 @@ public class BotaoTabuleiro extends JButton {
         this.setBounds(x, y, 42, 42);
         this.setOpaque(true);
         this.setBorderPainted(true);
+        this.setBackground(Color.gray);
         this.addActionListener(e -> {
             BotaoTabuleiro botao = (BotaoTabuleiro) e.getSource();
             System.out.println("\n");
@@ -42,14 +43,14 @@ public class BotaoTabuleiro extends JButton {
             System.out.println("Item: " + botao.item);
             System.out.println("------------------------------------");
         });
-        if (this.debug) {
-            this.setBackground(Color.WHITE);
-        }
-        else {
-            this.setBackground(Color.GRAY);
-        }
+            if (this.debug) {
+                this.setBackground(Color.WHITE);
+            }
+            else {
+                this.setBackground(Color.GRAY);
+            }
     }
-
+    
     public void setDebug(boolean debug) {
         this.debug = debug;
         if (this.debug){
@@ -111,7 +112,6 @@ public class BotaoTabuleiro extends JButton {
         } else {
             System.out.println("Adicionando monstro: " + personagem);
         }
-
         if (!this.escondido || this.debug) {
             this.setBackground(color);
         }
@@ -123,20 +123,19 @@ public class BotaoTabuleiro extends JButton {
         } else {
             System.out.println("Removendo monstro: " + personagem);
         }
+            if (this.escondido && !this.debug) {
+                this.setBackground(Color.GRAY);
+            } else {
+                this.setBackground(Color.WHITE);
+            }
 
-        if (this.escondido && !this.debug) {
-            this.setBackground(Color.GRAY);
-        } else {
-            this.setBackground(Color.WHITE);
-        }
+            switch (item){
+                case MADEIRA -> this.setBackground(COR_DESTAQUE_MADEIRA);
+                case OURO -> this.setBackground(COR_DESTAQUE_OURO);
+                case POCO -> this.setBackground(COR_DESTAQUE_POCO);
+            }
 
-        switch (item){
-            case MADEIRA -> this.setBackground(COR_DESTAQUE_MADEIRA);
-            case OURO -> this.setBackground(COR_DESTAQUE_OURO);
-            case POCO -> this.setBackground(COR_DESTAQUE_POCO);
-        }
-
-        this.personagem = null;
+            this.personagem = null;
     }
 
     public Personagem retornarPersonagem() {
@@ -162,4 +161,18 @@ public class BotaoTabuleiro extends JButton {
     public TipoDeItem retornarItem() {
         return this.item;
     }
+
+//    private void atualizaBackground() {
+//        if (this.escondido) {
+//            this.setBackground(Color.GRAY);
+//            return;
+//        }
+//
+//        switch (item){
+//            case MADEIRA -> this.setBackground(COR_DESTAQUE_MADEIRA);
+//            case OURO -> this.setBackground(COR_DESTAQUE_OURO);
+//            case VAZIO -> this.setBackground(Color.WHITE);
+//            default -> System.out.println("Item errado");
+//        }
+//    }
 }
