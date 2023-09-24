@@ -159,40 +159,43 @@ public class Tabuleiro extends JFrame {
                     System.exit(0);
                 }
         }
-        if(jogadorPoco(novoX, novoY)) {
-            JOptionPane.showMessageDialog(null, "Você caiu em um poço, fim de jogo!", "Game Over", JOptionPane.WARNING_MESSAGE);
-            player.setVida(0);
-            atualizaCampoVida();
-            int escolha = JOptionPane.showOptionDialog(this, "Deseja recomeçar uma nova partida? ", "Escolha", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Recomeçar", "Sair"}, "Recomeçar");
-            if (escolha == JOptionPane.YES_OPTION) {
-                recomecarJogo();
-            } else {
-                System.exit(0);
-            }
-        }
-        if (posicaoValida(novoX, novoY)) {
-            atualizaPosicaoJogador(novoX, novoY);
-            if (player.getVida() > 0) {
-                coletaItem();
-                atualizaCampoItens();
-                moverMonstroRapido();
-                moverMonstroLento();
+       if(brisa(novoX, novoY))
+            JOptionPane.showMessageDialog(this, "Você está sentindo uma brisa, cuidado", "Brisa", JOptionPane.INFORMATION_MESSAGE);
+
+            if(jogadorPoco(novoX, novoY)) {
+                JOptionPane.showMessageDialog(null, "Você caiu em um poço, fim de jogo!", "Game Over", JOptionPane.WARNING_MESSAGE);
+                player.setVida(0);
                 atualizaCampoVida();
-                    if (player.getQuantidadeOuro() > 0 && player.getPosX() == 0 && player.getPosY() == 0) {
-                        JOptionPane.showMessageDialog(this, "Parabéns! Você ganhou o jogo.", "Vitória", JOptionPane.INFORMATION_MESSAGE);
-                        int escolha = JOptionPane.showOptionDialog(this,"Deseja recomeçar uma nova partida? ","Escolha",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,new String[] { "Recomeçar", "Sair" },"Recomeçar");
-                            if (escolha == JOptionPane.YES_OPTION) {
-                                recomecarJogo();
-                            } else {
-                                System.exit(0);
-                            }
+                int escolha = JOptionPane.showOptionDialog(this, "Deseja recomeçar uma nova partida? ", "Escolha", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new String[]{"Recomeçar", "Sair"}, "Recomeçar");
+                    if (escolha == JOptionPane.YES_OPTION) {
+                        recomecarJogo();
+                    } else {
+                        System.exit(0);
                     }
-            } else {
-                System.out.println("Jogador sem vida!");
             }
-        } else {
-            System.out.println("Posicao invalida");
-        }
+            if (posicaoValida(novoX, novoY)) {
+                atualizaPosicaoJogador(novoX, novoY);
+                if (player.getVida() > 0) {
+                    coletaItem();
+                    atualizaCampoItens();
+                    moverMonstroRapido();
+                    moverMonstroLento();
+                    atualizaCampoVida();
+                        if (player.getQuantidadeOuro() > 0 && player.getPosX() == 0 && player.getPosY() == 0) {
+                            JOptionPane.showMessageDialog(this, "Parabéns! Você ganhou o jogo.", "Vitória", JOptionPane.INFORMATION_MESSAGE);
+                            int escolha = JOptionPane.showOptionDialog(this,"Deseja recomeçar uma nova partida? ","Escolha",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null,new String[] { "Recomeçar", "Sair" },"Recomeçar");
+                                if (escolha == JOptionPane.YES_OPTION) {
+                                    recomecarJogo();
+                                } else {
+                                    System.exit(0);
+                                }
+                        }
+                } else {
+                    System.out.println("Jogador sem vida!");
+                }
+            } else {
+                System.out.println("Posicao invalida");
+            }
         System.out.println("--- Fim da Jogada " + this.nJogadas + " ---");
         nJogadas++;
     }
@@ -552,13 +555,22 @@ public class Tabuleiro extends JFrame {
         return false;
     }
 
-//    private void brisa(int x,int y){
-//        BotaoTabuleiro destino = botoesTabuleiro[x][y];
-//        boolean teste = false;
-//        if(destino.retornarItem() == TipoDeItem.POCO)
-//            teste = true;
-//        if(destino.getPosX() - 1 == destino // == (destino.retornarItem() == TipoDeItem.POCO))
-//    }
+    private boolean brisa(int x, int y) {
+        if (x - 1 >= 0 && botoesTabuleiro[x - 1][y].retornarItem() == TipoDeItem.POCO) {
+            return true;
+        }
+        if (x + 1 < 15 && botoesTabuleiro[x + 1][y].retornarItem() == TipoDeItem.POCO) {
+            return true;
+        }
+        if (y - 1 >= 0 && botoesTabuleiro[x][y - 1].retornarItem() == TipoDeItem.POCO) {
+            return true;
+        }
+        if (y + 1 < 15 && botoesTabuleiro[x][y + 1].retornarItem() == TipoDeItem.POCO) {
+            return true;
+        }
+
+        return false;
+    }
 
 }
 
