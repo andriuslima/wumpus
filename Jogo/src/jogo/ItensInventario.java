@@ -1,4 +1,3 @@
-
 package jogo;
 
 public class ItensInventario {
